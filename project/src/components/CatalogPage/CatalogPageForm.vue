@@ -163,9 +163,14 @@ export default {
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04), 0px 6px 10px rgba(0, 0, 0, 0.02);
     border-radius: 4px;
     padding: 24px 24px 8px;
+   
     &_fixed{
         position: fixed;
         top: 24px;
+        @media (max-width: 768px) {
+             position: absolute;
+             top: 0;
+        }
     }
     &__item{
         width: 100%;

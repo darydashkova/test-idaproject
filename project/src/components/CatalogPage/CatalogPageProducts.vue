@@ -1,23 +1,28 @@
 <template>
     <div class="catalog-products">
             <div class="catalog-products__card" v-for="(product, index) in data" :key="index" >
+                <img src="../../assets/delete.svg" class="catalog-products__card-delete" @click="openModal(index)">
+              <div class="catalog-products__card_overflow">
                 <div class="catalog-products__card_top">
                     <div class="catalog-products__card-img" :style="{ backgroundImage: `url('${product.img}')` }"></div>
                     <div class="catalog-products__card-title"> {{product.name}}</div>
                     <div class="catalog-products__card-text">{{product.text}}</div>
                  </div>
                  <div class="catalog-products__card-price">{{formattedPrice(product.price)}} руб.</div>  
+                 </div>
         </div>
-
     </div>
 </template>
 <script>
 import {ref} from 'vue'
+
+
 export default {
     props:{
         data:Object,
         },
-    setup(props) {
+        emits:['openModal'],
+    setup(props, {emit}) {
         const price = ref('')
          const formattedPrice = (item) => {
              
@@ -28,8 +33,12 @@ export default {
             price.value=copyPrice.value
             return price.value
         }
+        const openModal = (index) => {
+            emit('openModal', index)
+        }
         return{
             formattedPrice,
+            openModal
         }
     },
 }
@@ -40,7 +49,16 @@ export default {
     flex-wrap: wrap;
     width: 100%;
     margin-left: 332px;
+     @media (max-width: 728px) {
+       margin-left: inherit;
+     }
+     @media (max-width: 768px) {
+       margin-left: -50px;
+       justify-content: center;
+       margin-top: 470px;
+    }
     &__card{
+        position: relative;
         width: 100%;
         max-width: 332px;
         min-width: 250px;
@@ -49,16 +67,49 @@ export default {
         border-radius: 4px;
         margin-left: 16px;
         margin-bottom: 16px;
-        border-radius: 4px;
-        overflow: hidden;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+
+         @media (max-width: 728px) {
+            margin-left: 0;
+        }
+         @media (max-width: 768px) {
+            margin-left: 50px;
+        }
+        &_overflow{
+            border-radius: 4px;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        &-delete{
+            display: none;
+            height: 0;
+            }
+        &:hover{
+            .catalog-products__card-delete{
+                display: inherit !important;
+                height: auto !important;
+                z-index: 999;
+                position: absolute;
+                right: 0;
+                cursor: pointer;
+                right: -15px;
+                top: -15px;
+            }
+        }
         &-img{
             width: 332px;
             height: 200px;
             background-repeat: no-repeat;
             background-size: cover;
+            @media (max-width: 768px) {
+                width: 100%;
+                height: 180px;
+            }
         }
         &-title{
             padding: 16px ;
