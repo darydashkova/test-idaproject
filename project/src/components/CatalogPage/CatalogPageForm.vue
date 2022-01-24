@@ -6,11 +6,11 @@
                 <rect width="4" height="4" rx="2" fill="#FF8484"/>
                 </svg>
             </div>
-            <input class="catalog-form__item-input" placeholder="Введите наименование товара">
+            <input class="catalog-form__item-input" placeholder="Введите наименование товара" v-model="name" :class="{'error' : error.name}">
         </div>
         <div class="catalog-form__item">
             <div class="catalog-form__item-title">Описание товара</div>
-            <textarea class="catalog-form__item-textarea" placeholder="Введите описание товара"></textarea>
+            <textarea class="catalog-form__item-textarea" placeholder="Введите описание товара" v-model="text" ></textarea>
         </div>
         <div class="catalog-form__item">
             <div class="catalog-form__item-title">Ссылка на изображение товара
@@ -18,7 +18,7 @@
                 <rect width="4" height="4" rx="2" fill="#FF8484"/>
                 </svg>
             </div>
-            <input class="catalog-form__item-input" placeholder="Введите ссылку">
+            <input class="catalog-form__item-input" placeholder="Введите ссылку" v-model="img" :class="{'error' : error.img}">
         </div>
         <div class="catalog-form__item">
             <div class="catalog-form__item-title">Цена товара
@@ -26,10 +26,10 @@
                 <rect width="4" height="4" rx="2" fill="#FF8484"/>
                 </svg>
             </div>
-            <input class="catalog-form__item-input" placeholder="Введите цену"  @input="thouthands(price)" v-model="price" >
+            <input class="catalog-form__item-input" placeholder="Введите цену"  @input="thouthands(price)" v-model="price" :class="{'error' : error.price}">
         </div>
         <div class="catalog-form__item">
-            <div class="catalog-form__item-button inter">Добавить товар</div>
+            <div class="catalog-form__item-button inter" @click="add">Добавить товар</div>
         </div>
     </div>
 </template>
@@ -39,7 +39,10 @@ import {ref} from 'vue'
 
 export default {
     setup() {
-        const price = ref()
+        const price = ref('')
+        const name = ref('')
+        const img = ref('')
+        const text = ref('')
         const formattedPrice = (form) => {
             const value = ref(form); 
             var rep = /[-":'a-zA-Zа-яА-Я]/; 
@@ -61,17 +64,75 @@ export default {
             copyPrice.value =  item.replace(/(\d)(?=(\d{3})+([^\d]|$))/g, "$1 ")
             price.value=copyPrice.value
         }
+        const error = ref({
+                name:false,
+                img:false,
+                price:false,
+            })
+            const objectPrice = ref({
+                img:'',
+                price:'', 
+                name:'', 
+                text:'',
+            })
+        const validate = () => {
+            const valid = ref(true)
+            console.log()
+            if(name.value.length!=0){
+                objectPrice.value.name=name.value
+                valid.value=true
+                 error.value.name=false
+            }
+            else{
+                valid.value=false
+                error.value.name=true
+            }
+            if(price.value.length!=0){
+                objectPrice.value.price=price.value
+                valid.value=true
+                error.value.price=false
+            }
+            else{
+                valid.value=false
+                error.value.price=true
+            }
+            if(img.value.length!=0){
+                objectPrice.value.img=img.value
+                valid.value=true
+                error.value.img=false
+            }
+            else{
+                error.value.img=true
+                valid.value=false
+            }
+            objectPrice.value.text=text.value
+            return valid.value
+        }
+        const add = () => {
+            if(validate()){
+             console.log(objectPrice.value)
+            }
+        }
         return{
             thouthands,
             price,
-            formattedPrice
+            formattedPrice,
+            add,
+            validate,
+            error,
+            name,
+            img,
+            objectPrice,
+            text
         }
     },
 }
 </script>
 <style lang="scss">
 .catalog-form{
-    width: 332px;
+    position: absolute;
+    width: 100%;
+    max-width: 284px;
     background: #FFFEFB;
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04), 0px 6px 10px rgba(0, 0, 0, 0.02);
     border-radius: 4px;
@@ -132,5 +193,8 @@ export default {
 
         }
     }
+}
+.error{
+    border:  1px solid red;
 }
 </style>

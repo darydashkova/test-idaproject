@@ -18,25 +18,44 @@
         </div>
         <div class="products__data">
             <CatalogPageForm></CatalogPageForm>
+            <CatalogPageProducts :data="products"></CatalogPageProducts>
         </div>
-        
         
         
     </div>
 </template>
 
 <script>
-    import { ref } from 'vue';
+    import { ref, onMounted } from 'vue';
     import CatalogPageForm from '../components/CatalogPage/CatalogPageForm'
-
+    import CatalogPageProducts from '../components/CatalogPage/CatalogPageProducts'
+            
     export default {
     
-        components: {CatalogPageForm},
+        components: {CatalogPageForm, CatalogPageProducts},
         setup() {
             const filters = ref([
                 {title:'По умолчанию', value:'default'},
                 {title:'По возрастанию', value:'min'},
                 {title:'По убыванию', value:'max'}
+            ])
+        const products = ref([
+                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:'150000', 
+                name:'Товар1', text:'Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк'},
+                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:'1400', 
+                name:'Товар1', text:'Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк'},
+                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:'1400', 
+                name:'Товар1', text:'Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк'},
+                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:'1400', 
+                name:'Товар1', text:'Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк'},
+                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:'1400', 
+                name:'Товар1', text:'Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк'},
+                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:'1400', 
+                name:'Товар1', text:'Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк'},
+                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:'1400', 
+                name:'Товар1', text:'Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк'},
+                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:'1400', 
+                name:'Товар1', text:'Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк'},
             ])
             const activeFilter = ref()
 
@@ -46,15 +65,24 @@
 
             const getFilter = (filter) => {
                 activeFilter.value = filter
-                console.log(filter)
-                console.log(activeFilter.value)
             }
 
+            window.onbeforeunload = () => { 
+             localStorage.setItem('products', JSON.stringify(products.value)) 
+            }
+             
+            onMounted(()=>{
+                if(JSON.parse(localStorage.getItem("products"))!=null){
+                   products.value=JSON.parse(localStorage.getItem("products")); 
+                }
+            })
             return {
                 filters,
                 activeFilter,
                 isActiveList,
-                getFilter
+                getFilter,
+                products,
+                
             }
             
         },
@@ -64,6 +92,7 @@
 <style lang="scss">
 .products{
     padding: 32px;
+    
     &__main{
         display: flex;
         justify-content: space-between;
@@ -113,6 +142,7 @@
             right: 32px;
             top: 75px;
             display: flex;
+            z-index: 99;
             flex-direction: column;
             align-items:flex-start ;
             box-shadow:1px 2px 5px 1px rgba(180, 180, 180, 0.3);
@@ -135,7 +165,9 @@
     }
     }
     &__data{
+        position: relative;
         margin-top: 16px;
+        display: flex;
     }
 }
 </style>
