@@ -1,11 +1,12 @@
 <template>
     <div class="catalog-products">
             <div class="catalog-products__card" v-for="(product, index) in data" :key="index" >
-                 <div class="catalog-products__card-img" :style="{ backgroundImage: `url('${product.img}')` }"></div>
-                 <div class="catalog-products__card-title"> {{product.name}}</div>
-                 <div class="catalog-products__card-text">{{product.text}}</div>
-                 <div class="catalog-products__card-price">{{formattedPrice(product.price)}} руб.</div>
-               
+                <div class="catalog-products__card_top">
+                    <div class="catalog-products__card-img" :style="{ backgroundImage: `url('${product.img}')` }"></div>
+                    <div class="catalog-products__card-title"> {{product.name}}</div>
+                    <div class="catalog-products__card-text">{{product.text}}</div>
+                 </div>
+                 <div class="catalog-products__card-price">{{formattedPrice(product.price)}} руб.</div>  
         </div>
 
     </div>
@@ -50,6 +51,9 @@ export default {
         margin-bottom: 16px;
         border-radius: 4px;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         &-img{
             width: 332px;
             height: 200px;

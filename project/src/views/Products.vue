@@ -17,7 +17,7 @@
                 </div>
         </div>
         <div class="products__data">
-            <CatalogPageForm></CatalogPageForm>
+            <CatalogPageForm @newProduct='postProduct'></CatalogPageForm>
             <CatalogPageProducts :data="products"></CatalogPageProducts>
         </div>
         
@@ -76,12 +76,18 @@
                    products.value=JSON.parse(localStorage.getItem("products")); 
                 }
             })
+            const postProduct = (i) => {
+                 products.value.push(i)
+                console.log(products.value)
+            }
+            
             return {
                 filters,
                 activeFilter,
                 isActiveList,
                 getFilter,
                 products,
+                postProduct
                 
             }
             
@@ -139,7 +145,8 @@
        }
        &-list{
             position: absolute;
-            right: 32px;
+            background: #FFFEFB;
+            right: 15px;
             top: 75px;
             display: flex;
             z-index: 99;

@@ -1,12 +1,12 @@
 <template>
-    <div class="catalog-form">
+    <div class="catalog-form" :class="{'catalog-form_fixed':isFixedForm}">
         <div class="catalog-form__item">
             <div class="catalog-form__item-title">Наименование товара
                 <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="4" height="4" rx="2" fill="#FF8484"/>
                 </svg>
             </div>
-            <input class="catalog-form__item-input" placeholder="Введите наименование товара" v-model="name" :class="{'error' : error.name}">
+            <input class="catalog-form__item-input" placeholder="Введите наименование товара" v-model="name" :class="{'error' : error.name}" @input="checkAllDate()" >
         </div>
         <div class="catalog-form__item">
             <div class="catalog-form__item-title">Описание товара</div>
@@ -18,7 +18,7 @@
                 <rect width="4" height="4" rx="2" fill="#FF8484"/>
                 </svg>
             </div>
-            <input class="catalog-form__item-input" placeholder="Введите ссылку" v-model="img" :class="{'error' : error.img}">
+            <input class="catalog-form__item-input" placeholder="Введите ссылку" v-model="img" :class="{'error' : error.img}" @input="checkAllDate()">
         </div>
         <div class="catalog-form__item">
             <div class="catalog-form__item-title">Цена товара
@@ -26,10 +26,10 @@
                 <rect width="4" height="4" rx="2" fill="#FF8484"/>
                 </svg>
             </div>
-            <input class="catalog-form__item-input" placeholder="Введите цену"  @input="thouthands(price)" v-model="price" :class="{'error' : error.price}">
+            <input class="catalog-form__item-input" placeholder="Введите цену"  @input="thouthands(price), checkAllDate()" v-model="price" :class="{'error' : error.price}" >
         </div>
         <div class="catalog-form__item">
-            <div class="catalog-form__item-button inter" @click="add">Добавить товар</div>
+            <div class="catalog-form__item-button inter" @click="add" :class="{'catalog-form__item-button_active':isActiveButtton,}">Добавить товар</div>
         </div>
     </div>
 </template>
@@ -38,7 +38,9 @@
 import {ref} from 'vue'
 
 export default {
-    setup() {
+    emits:['newProduct'],
+    props:{},
+    setup(props, {emit}) {
         const price = ref('')
         const name = ref('')
         const img = ref('')
@@ -50,6 +52,15 @@ export default {
                 value.value = value.value.replace(rep, ''); 
                 form = value.value; 
             } 
+        }
+        const isActiveButtton = ref(false)
+        const checkAllDate = () => {
+            if(price.value.length&&name.value.length&&img.value.length){
+                isActiveButtton.value = true
+            }
+            else{
+                isActiveButtton.value = false
+            }
         }
         const thouthands = (item) => {
             const value = ref(item); 
@@ -89,28 +100,40 @@ export default {
             }
             if(price.value.length!=0){
                 objectPrice.value.price=price.value
-                valid.value=true
+                
                 error.value.price=false
             }
             else{
-                valid.value=false
                 error.value.price=true
+               
             }
             if(img.value.length!=0){
                 objectPrice.value.img=img.value
-                valid.value=true
+               
                 error.value.img=false
             }
             else{
                 error.value.img=true
+               
+            }
+            if( error.value.img|| error.value.price|| error.value.name){
                 valid.value=false
             }
             objectPrice.value.text=text.value
             return valid.value
         }
+        const isFixedForm = ref(false)
+        window.addEventListener('scroll', function(e) {
+            if(this.window.pageYOffset>65){
+                isFixedForm.value = true
+            }
+            else{
+                isFixedForm.value = false
+            }
+        });
         const add = () => {
             if(validate()){
-             console.log(objectPrice.value)
+             emit('newProduct',  objectPrice.value)
             }
         }
         return{
@@ -123,7 +146,10 @@ export default {
             name,
             img,
             objectPrice,
-            text
+            text,
+            isActiveButtton,
+            checkAllDate,
+            isFixedForm
         }
     },
 }
@@ -137,6 +163,10 @@ export default {
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04), 0px 6px 10px rgba(0, 0, 0, 0.02);
     border-radius: 4px;
     padding: 24px 24px 8px;
+    &_fixed{
+        position: fixed;
+        top: 24px;
+    }
     &__item{
         width: 100%;
         margin-bottom: 16px;
@@ -190,7 +220,10 @@ export default {
             letter-spacing: -0.02em;
             color: #B4B4B4;
             cursor: pointer;
-
+            &_active{
+                background: #7BAE73  !important;
+                color: #FFFFFF !important;
+            }
         }
     }
 }
