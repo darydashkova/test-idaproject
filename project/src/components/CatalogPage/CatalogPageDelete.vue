@@ -1,9 +1,11 @@
 <template>
     <div class="catalog-delete">
-        <div class="catalog-delete__title">Вы действительно хотите удалить карточку товара?</div>
-        <div class="catalog-delete__answer">
-            <div class="catalog-delete__answer-delete" @click="del">Удалить</div>
-            <div class="catalog-delete__answer-back" @click="close">Отмена</div>
+        <div  class="catalog-delete__modal">
+            <div class="catalog-delete__modal-title">Вы действительно хотите удалить карточку товара?</div>
+            <div class="catalog-delete__modal-answer">
+                <div class="catalog-delete__modal-answer-delete" @click="del">Удалить</div>
+                <div class="catalog-delete__modal-answer-back" @click="close">Отмена</div>
+            </div>
         </div>
     </div>
 </template>
@@ -29,6 +31,13 @@ export default {
 <style lang="scss">
     .catalog-delete{
         position: fixed;
+        background-color: rgba(0, 0, 0, 0.2);
+        width: 100%;
+        left: 0;
+        height: 100%;
+        top: 0;
+        &__modal{
+        position: relative;
         top: 0;
         height: 150px;
         width: 400px;
@@ -39,10 +48,11 @@ export default {
         transform: translate(-50%, -40%);
         padding: 0px 16px;
         left: 50%;
-        &__title{
-            padding-top: 40px;
+        &-title{
+            padding-top: 20px;
+            font-weight: 600;
         }
-        &__answer{
+        &-answer{
             padding-top: 40px;
             display: flex;
             justify-content: space-evenly;
@@ -73,5 +83,6 @@ export default {
             }
         }
         
+    }
     }
 </style>

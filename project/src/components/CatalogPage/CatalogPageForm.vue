@@ -29,7 +29,7 @@
             <input class="catalog-form__item-input" placeholder="Введите цену"  @input="thouthands(price), checkAllDate()" v-model="price" :class="{'error' : error.price}" >
         </div>
         <div class="catalog-form__item">
-            <div class="catalog-form__item-button inter" @click="add" :class="{'catalog-form__item-button_active':isActiveButtton,}">Добавить товар</div>
+            <div class="catalog-form__item-button inter" @click="add" :class="{'catalog-form__item-button_active':isActiveButtton}">Добавить товар</div>
         </div>
     </div>
 </template>
@@ -108,9 +108,13 @@ export default {
                
             }
             if(img.value.length!=0){
-                objectPrice.value.img=img.value
-               
-                error.value.img=false
+                if(img.value.startsWith('http')){
+                    objectPrice.value.img=img.value
+                    error.value.img=false  
+                }
+                else{
+                    error.value.img=true 
+                }
             }
             else{
                 error.value.img=true
@@ -133,7 +137,12 @@ export default {
         });
         const add = () => {
             if(validate()){
-             emit('newProduct',  objectPrice.value)
+                emit('newProduct',  objectPrice.value)
+                price.value = ''
+                name.value =''
+                img.value = ''
+                text.value = ''
+                isActiveButtton.value = false
             }
         }
         return{
@@ -225,10 +234,10 @@ export default {
             text-align: center;
             letter-spacing: -0.02em;
             color: #B4B4B4;
-            cursor: pointer;
             &_active{
                 background: #7BAE73  !important;
                 color: #FFFFFF !important;
+                cursor: pointer;
             }
         }
     }

@@ -23,6 +23,7 @@
             <CatalogPageProducts :data="copyProducts" @openModal='getIndex'></CatalogPageProducts>
         </div>
         <CatalogPageDelete v-if="isOpenModalDelete" @del="deleteCard" @close="isOpenModalDelete = false, cartToDelete = null"></CatalogPageDelete>
+        <CatalogPageAddedModal @close='isOpenModalAdded=false' v-if="isOpenModalAdded"></CatalogPageAddedModal>
     </div>
 </template>
 
@@ -31,12 +32,14 @@
     import CatalogPageForm from '../components/CatalogPage/CatalogPageForm'
     import CatalogPageProducts from '../components/CatalogPage/CatalogPageProducts'
     import CatalogPageDelete from '../components/CatalogPage/CatalogPageDelete.vue'
+    import CatalogPageAddedModal from '../components/CatalogPage/CatalogPageAddedModal.vue'
             
     export default {
     
-        components: {CatalogPageForm, CatalogPageProducts, CatalogPageDelete},
+        components: {CatalogPageForm, CatalogPageProducts, CatalogPageDelete, CatalogPageAddedModal},
         setup() {
             const isOpenModalDelete = ref(false);
+            const isOpenModalAdded = ref(false)
             const filters = ref([
                 {title:'По умолчанию', value:'default'},
                 {title:'По возрастанию', value:'min'},
@@ -80,7 +83,6 @@
                 activeFilter.value = filter
                 if(filter.value == 'min'){
                    copyProducts.value.sort((prev, next) => prev.price - next.price);
-                  
                 }
                  else if(filter.value == 'max'){
                    copyProducts.value.reverse(function(a, b) { return a.price < b.price });
@@ -98,12 +100,14 @@
              copyProducts.value = products.value.slice();
             onMounted(()=>{
                 if(JSON.parse(localStorage.getItem("products"))!=null){
+                   copyProducts.value=JSON.parse(localStorage.getItem("products")); 
                    products.value=JSON.parse(localStorage.getItem("products")); 
                 }
             })
             const postProduct = (i) => {
                  products.value.push(i)
                  copyProducts.value = products.value.slice();
+                 isOpenModalAdded.value = true;
                
             }
             
@@ -118,7 +122,8 @@
                 deleteCard,
                 getIndex,
                 cartToDelete,
-                copyProducts
+                copyProducts,
+                isOpenModalAdded
                 
             }
             

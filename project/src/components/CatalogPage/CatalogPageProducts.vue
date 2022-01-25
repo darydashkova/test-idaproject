@@ -70,6 +70,7 @@ export default {
         margin-bottom: 16px;
         display: flex;
         flex-direction: column;
+        transition: all 0.3s ease-in-out;
         justify-content: space-between;
         @media (min-width:729px) and (max-width: 1440px) {
             max-width:250px
@@ -93,6 +94,9 @@ export default {
             height: 0;
             }
         &:hover{
+            transform: scale(1.1);
+            z-index: 99;
+            transition: all 0.3s ease-in-out;
             .catalog-products__card-delete{
                 display: inherit !important;
                 height: auto !important;
@@ -109,6 +113,10 @@ export default {
             height: 200px;
             background-repeat: no-repeat;
             background-size: cover;
+             @media (min-width:729px) and (max-width: 1440px) {
+                width:250px;
+                height: 180px;
+            }
             @media (max-width: 768px) {
                 width: 100%;
                 height: 180px;
