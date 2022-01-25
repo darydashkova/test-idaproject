@@ -99,7 +99,7 @@ export default {
                 error.value.name=true
             }
             if(price.value.length!=0){
-                objectPrice.value.price=price.value
+                objectPrice.value.price=Number(price.value.replace(/\s/g, ''))
                 
                 error.value.price=false
             }
@@ -187,7 +187,8 @@ export default {
             border-radius: 4px;
             border: none;
             padding-left: 16px;
-             font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+            font-family: Source Sans Pro, Helvetica, Arial, sans-serif;
+            text-overflow: ellipsis;
             &::placeholder{
                 font-size: 12px;
                 line-height: 15px;

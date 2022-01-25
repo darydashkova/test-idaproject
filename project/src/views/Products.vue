@@ -20,7 +20,7 @@
         </div>
         <div class="products__data">
             <CatalogPageForm @newProduct='postProduct' ></CatalogPageForm>
-            <CatalogPageProducts :data="products" @openModal='getIndex'></CatalogPageProducts>
+            <CatalogPageProducts :data="copyProducts" @openModal='getIndex'></CatalogPageProducts>
         </div>
         <CatalogPageDelete v-if="isOpenModalDelete" @del="deleteCard" @close="isOpenModalDelete = false, cartToDelete = null"></CatalogPageDelete>
     </div>
@@ -53,21 +53,21 @@
                 isOpenModalDelete.value = true
             }
         const products = ref([
-                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:'150000', 
+                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:150000, 
                 name:'Товар1', text:'Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк'},
-                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:'1400', 
+                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:1400, 
                 name:'Товар1', text:'Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк'},
-                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:'1400', 
+                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:1400, 
                 name:'Товар1', text:'Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк'},
-                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:'1400', 
+                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:1400, 
                 name:'Товар1', text:'Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк'},
-                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:'1400', 
+                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:1900, 
                 name:'Товар1', text:'Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк'},
-                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:'1400', 
+                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:1400, 
                 name:'Товар1', text:'Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк'},
-                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:'1400', 
+                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:1400, 
                 name:'Товар1', text:'Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк'},
-                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:'1400', 
+                {img:'https://html5book.ru/wp-content/uploads/2014/07/html_images.png', price:1400, 
                 name:'Товар1', text:'Довольно-таки интересное описание товара в несколько строк. Довольно-таки интересное описание товара в несколько строк'},
             ])
             const activeFilter = ref()
@@ -78,12 +78,24 @@
 
             const getFilter = (filter) => {
                 activeFilter.value = filter
+                if(filter.value == 'min'){
+                   copyProducts.value.sort((prev, next) => prev.price - next.price);
+                  
+                }
+                 else if(filter.value == 'max'){
+                   copyProducts.value.reverse(function(a, b) { return a.price < b.price });
+                }
+                else {
+                    copyProducts.value = products.value.slice();
+                }
+
             }
 
             window.onbeforeunload = () => { 
              localStorage.setItem('products', JSON.stringify(products.value)) 
             }
-             
+             const copyProducts = ref();
+             copyProducts.value = products.value.slice();
             onMounted(()=>{
                 if(JSON.parse(localStorage.getItem("products"))!=null){
                    products.value=JSON.parse(localStorage.getItem("products")); 
@@ -91,7 +103,8 @@
             })
             const postProduct = (i) => {
                  products.value.push(i)
-                console.log(products.value)
+                 copyProducts.value = products.value.slice();
+               
             }
             
             return {
@@ -104,7 +117,8 @@
                 isOpenModalDelete,
                 deleteCard,
                 getIndex,
-                cartToDelete
+                cartToDelete,
+                copyProducts
                 
             }
             

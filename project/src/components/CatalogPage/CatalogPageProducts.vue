@@ -9,6 +9,7 @@
                     <div class="catalog-products__card-text">{{product.text}}</div>
                  </div>
                  <div class="catalog-products__card-price">{{formattedPrice(product.price)}} руб.</div>  
+                     <!-- <div class="catalog-products__card-price">{{product.price}} руб.</div>   -->
                  </div>
         </div>
     </div>
@@ -25,7 +26,7 @@ export default {
     setup(props, {emit}) {
         const price = ref('')
          const formattedPrice = (item) => {
-             
+             item = String(item)
             item = item.replace(/\s/g, '');
             const copyPrice = ref()
             copyPrice.value=String(item)
@@ -70,7 +71,9 @@ export default {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-
+        @media (min-width:729px) and (max-width: 1440px) {
+            max-width:250px
+        }
          @media (max-width: 728px) {
             margin-left: 0;
         }
