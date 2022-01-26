@@ -47,6 +47,7 @@
             ])
             const deleteCard = () => {
                  products.value.splice( cartToDelete.value, 1)
+                 copyProducts.value.splice( cartToDelete.value, 1)
                  isOpenModalDelete.value = false
             }
             const cartToDelete = ref()
